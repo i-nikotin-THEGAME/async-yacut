@@ -1,0 +1,59 @@
+{% extends "base.html" %} {% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col-12">
+            <h1 class="text-center"><span style="color: red">Ya</span>Cut</h1>
+            <p class="text-center my-4">
+                Создайте короткую ссылку автоматически или предложите свой
+                вариант
+            </p>
+        </div>
+    </div>
+
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <form method="POST" action="{{ url_for('index_view') }}">
+                {{ form.csrf_token }}
+
+                <div class="mb-3">
+                    {{ form.original_link(class="form-control form-control-lg",
+                    placeholder="Длинная ссылка", required=true) }} {% if
+                    form.original_link.errors %} {% for error in
+                    form.original_link.errors %}
+                    <p class="text-danger mt-1">{{ error }}</p>
+                    {% endfor %} {% endif %}
+                </div>
+
+                <div class="mb-3">
+                    {{ form.custom_id(class="form-control form-control-lg",
+                    placeholder="Ваш вариант короткой ссылки (необязательно)")
+                    }} {% if form.custom_id.errors %} {% for error in
+                    form.custom_id.errors %}
+                    <p class="text-danger mt-1">{{ error }}</p>
+                    {% endfor %} {% endif %}
+                    <small class="text-muted"
+                        >До 16 символов, только латинские буквы и цифры</small
+                    >
+                </div>
+
+                <div class="text-center">
+                    <button type="submit" class="btn btn-primary btn-lg">
+                        Создать
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    {% if short_url %}
+    <div class="row justify-content-center mt-5">
+        <div class="col-md-8">
+            <div class="alert alert-success text-center">
+                <h5>Ваша короткая ссылка:</h5>
+                <a href="{{ short_url }}" target="_blank">{{ short_url }}</a>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

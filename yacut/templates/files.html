@@ -1,0 +1,81 @@
+{% extends "base.html" %} {% block title %}Загрузка файлов - YaCut{% endblock %}
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col-12">
+            <h1 class="text-center">Загрузка файлов на Яндекс Диск</h1>
+            <p class="text-center my-4">
+                Загрузите файлы и получите короткие ссылки для скачивания
+            </p>
+        </div>
+    </div>
+
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <form
+                method="POST"
+                action="{{ url_for('files_view') }}"
+                enctype="multipart/form-data"
+            >
+                {{ form.csrf_token }}
+
+                <div class="mb-3">
+                    {{ form.files(class="form-control form-control-lg",
+                    multiple=true) }} {% if form.files.errors %} {% for error in
+                    form.files.errors %}
+                    <p class="text-danger mt-1">{{ error }}</p>
+                    {% endfor %} {% endif %}
+                    <small class="text-muted"
+                        >Выберите один или несколько файлов для загрузки</small
+                    >
+                </div>
+
+                <div class="text-center">
+                    <button type="submit" class="btn btn-primary btn-lg">
+                        Загрузить
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    {% if uploaded_files %}
+    <div class="row justify-content-center mt-5">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header bg-success text-white">
+                    <h5 class="mb-0">Загруженные файлы</h5>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Имя файла</th>
+                                    <th>Короткая ссылка</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for file in uploaded_files %}
+                                <tr>
+                                    <td>{{ file.filename }}</td>
+                                    <td>
+                                        <a
+                                            href="{{ file.short_link }}"
+                                            target="_blank"
+                                        >
+                                            {{ file.short_link }}
+                                        </a>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}
