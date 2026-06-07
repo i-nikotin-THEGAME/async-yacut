@@ -8,7 +8,11 @@ class URLForm(FlaskForm):
     """Форма для главной страницы - создание короткой ссылки"""
 
     original_link = StringField(
-        "Длинная ссылка", validators=[DataRequired(message="Обязательное поле"), URL(message="Введите корректный URL")]
+        "Длинная ссылка",
+        validators=[
+            DataRequired(message="Обязательное поле"),
+            URL(message="Введите корректный URL")
+        ]
     )
 
     custom_id = StringField(
@@ -16,7 +20,10 @@ class URLForm(FlaskForm):
         validators=[
             Optional(),
             Length(max=16, message="Длина не более 16 символов"),
-            Regexp(r"^[a-zA-Z0-9]+$", message="Используйте только латинские буквы и цифры"),
+            Regexp(
+                r"^[a-zA-Z0-9]+$",
+                message="Используйте только латинские буквы и цифры"
+            ),
         ],
     )
 
@@ -24,4 +31,9 @@ class URLForm(FlaskForm):
 class FileUploadForm(FlaskForm):
     """Форма для страницы загрузки файлов"""
 
-    files = MultipleFileField("Файлы", validators=[FileRequired(message="Выберите хотя бы один файл для загрузки")])
+    files = MultipleFileField(
+        "Файлы",
+        validators=[
+            FileRequired(message="Выберите хотя бы один файл для загрузки")
+        ]
+    )

@@ -1,6 +1,6 @@
 from datetime import datetime
 from yacut import db
-from yacut.settings import Config
+from settings import Config
 
 
 class URLMap(db.Model):
@@ -16,7 +16,9 @@ class URLMap(db.Model):
 
     def to_dict(self):
         """Преобразует модель в словарь для API ответов"""
-        return dict(url=self.original, short_link=f"{Config.BASE_URL}/{self.short}")
+        return dict(
+            url=self.original,
+            short_link=f"{Config.BASE_URL}/{self.short}")
 
     def from_dict(self, data):
         """Десериализатор: словарь из JSON -> объект модели"""

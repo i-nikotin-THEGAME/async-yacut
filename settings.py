@@ -9,4 +9,4 @@ class Config(object):
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     MAX_CONTENT_LENGTH = 16 * 1024 * 1024  # Максимальный размер файла 16MB
     DISK_TOKEN = os.getenv("DISK_TOKEN", "")
-    BASE_URL = "http://127.0.0.1:5000"
+    BASE_URL = "http://localhost"
