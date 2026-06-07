@@ -115,23 +115,25 @@ def files_view():
 
         disk_client = YandexDiskClient(app.config["DISK_TOKEN"])
 
-        upload_results = asyncio.run(upload_all_files_async(
-            files,
-            disk_client
-        ))
-        uploaded_files = save_uploaded_files(
-            upload_results,
-            app.config,
-            db.session
-        )
-
-        success_count = len([f for f in uploaded_files if "error" not in f])
-        flash(f"Загружено {success_count} файлов", "success")
-
+        try:
+            print(f"[files_view] Начинаем загрузку {len(files)} файлов")
+            upload_results = asyncio.run(
+                upload_all_files_async(files, disk_client)
+            )
+            print(f"[files_view] Результаты: {upload_results}")
+            uploaded_files = save_uploaded_files(
+                upload_results,
+                app.config,
+                db.session
+            )
+            print(f"[files_view] Сохранено: {uploaded_files}")
+        except Exception as e:
+            print(f"[files_view] ИСКЛЮЧЕНИЕ: {type(e).__name__}: {e}")
+            import traceback
+            traceback.print_exc()
+            flash(f"Ошибка загрузки файлов: {str(e)}", "danger")
         return render_template(
-            "files.html",
-            form=form,
-            uploaded_files=uploaded_files
+            "files.html", form=form, uploaded_files=uploaded_files
         )
 
     return render_template(
