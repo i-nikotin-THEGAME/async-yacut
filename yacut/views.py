@@ -1,6 +1,7 @@
 import asyncio
 from flask import render_template, redirect, flash
 from yacut import app, db
+from yacut.constants import RESERVED_SHORT_IDS
 from yacut.forms import URLForm, FileUploadForm
 from yacut.models import URLMap
 from yacut.utils import get_unique_short_id, check_unique_short_id
@@ -16,7 +17,7 @@ def index_view():
         original_link = form.original_link.data
         custom_id = form.custom_id.data if form.custom_id.data else None
 
-        if custom_id and custom_id.lower() == "files":
+        if custom_id and custom_id.lower() in RESERVED_SHORT_IDS:
             flash(
                 "Предложенный вариант короткой ссылки уже существует.",
                 "danger"
@@ -115,23 +116,18 @@ def files_view():
 
         disk_client = YandexDiskClient(app.config["DISK_TOKEN"])
 
-        try:
-            print(f"[files_view] Начинаем загрузку {len(files)} файлов")
-            upload_results = asyncio.run(
-                upload_all_files_async(files, disk_client)
-            )
-            print(f"[files_view] Результаты: {upload_results}")
-            uploaded_files = save_uploaded_files(
-                upload_results,
-                app.config,
-                db.session
-            )
-            print(f"[files_view] Сохранено: {uploaded_files}")
-        except Exception as e:
-            print(f"[files_view] ИСКЛЮЧЕНИЕ: {type(e).__name__}: {e}")
-            import traceback
-            traceback.print_exc()
-            flash(f"Ошибка загрузки файлов: {str(e)}", "danger")
+        upload_results = asyncio.run(
+            upload_all_files_async(files, disk_client)
+        )
+        uploaded_files = save_uploaded_files(
+            upload_results,
+            app.config,
+            db.session
+        )
+
+        success_count = len([f for f in uploaded_files if "error" not in f])
+        flash(f"Загружено {success_count} файлов", "success")
+
         return render_template(
             "files.html", form=form, uploaded_files=uploaded_files
         )

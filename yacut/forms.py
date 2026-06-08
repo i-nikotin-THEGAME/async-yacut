@@ -3,6 +3,8 @@ from wtforms import StringField, MultipleFileField
 from wtforms.validators import DataRequired, URL, Length, Regexp, Optional
 from flask_wtf.file import FileRequired
 
+from yacut.constants import SHORT_ID_MAX_LEN, SHORT_ID_PATTERN
+
 
 class URLForm(FlaskForm):
     """Форма для главной страницы - создание короткой ссылки"""
@@ -19,9 +21,9 @@ class URLForm(FlaskForm):
         "Ваш вариант короткой ссылки",
         validators=[
             Optional(),
-            Length(max=16, message="Длина не более 16 символов"),
+            Length(max=SHORT_ID_MAX_LEN, message=f"Длина не более {SHORT_ID_MAX_LEN} символов"),
             Regexp(
-                r"^[a-zA-Z0-9]+$",
+                SHORT_ID_PATTERN,
                 message="Используйте только латинские буквы и цифры"
             ),
         ],

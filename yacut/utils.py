@@ -1,9 +1,10 @@
 import random
 import string
+from yacut.constants import SHORT_ID_AUTO_LEN
 from yacut.models import URLMap
 
 
-def get_unique_short_id(length=6):
+def get_unique_short_id(length=SHORT_ID_AUTO_LEN):
     """
     Генерирует уникальный короткий идентификатор.
     """
