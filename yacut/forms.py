@@ -21,7 +21,10 @@ class URLForm(FlaskForm):
         "Ваш вариант короткой ссылки",
         validators=[
             Optional(),
-            Length(max=SHORT_ID_MAX_LEN, message=f"Длина не более {SHORT_ID_MAX_LEN} символов"),
+            Length(
+                max=SHORT_ID_MAX_LEN,
+                message=f"Длина не более {SHORT_ID_MAX_LEN} символов"
+            ),
             Regexp(
                 SHORT_ID_PATTERN,
                 message="Используйте только латинские буквы и цифры"

@@ -2,7 +2,11 @@ import re
 
 from flask import request, jsonify, Blueprint
 from yacut import db
-from yacut.constants import RESERVED_SHORT_IDS, SHORT_ID_MAX_LEN, SHORT_ID_PATTERN
+from yacut.constants import (
+    RESERVED_SHORT_IDS,
+    SHORT_ID_MAX_LEN,
+    SHORT_ID_PATTERN,
+)
 from yacut.models import URLMap
 from yacut.utils import get_unique_short_id, check_unique_short_id
 from yacut.error_handlers import InvalidAPIUsage
@@ -43,7 +47,10 @@ def create_short_link():
     # Если custom_id указан
     if custom_id:
         # Проверка валидности custom_id (только латиница и цифры, длина до 16)
-        if not re.match(SHORT_ID_PATTERN, custom_id) or len(custom_id) > SHORT_ID_MAX_LEN:
+        is_valid_format = re.match(SHORT_ID_PATTERN, custom_id)
+        is_valid_length = len(custom_id) <= SHORT_ID_MAX_LEN
+
+        if not is_valid_format or not is_valid_length:
             raise InvalidAPIUsage(
                 "Указано недопустимое имя для короткой ссылки"
             )
